@@ -1,12 +1,12 @@
-import React from "react";
-import logo from "../../../assets/images/logo.png";
-import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import logo from "../../../assets/images/logo.png";
 
-export default function Login({ saveLoginData }) {
+export default function ResetPass() {
   const navigate = useNavigate();
   const {
     register,
@@ -17,22 +17,18 @@ export default function Login({ saveLoginData }) {
   const onSubmit = async (data) => {
     try {
       let response = await axios.post(
-        "https://upskilling-egypt.com:443/api/v1/Users/Login",
+        "https://upskilling-egypt.com:443/api/v1/Users/Reset",
         data
       );
       setTimeout(
-        () => toast.success("login success", { position: "top-right" }),
+        () => toast.success("reset success", { position: "top-right" }),
         100
       );
-      localStorage.setItem("token", response.data.token);
-      saveLoginData();
-      navigate("/dashboard");
+      navigate("/login");
     } catch (error) {
       toast.error(error.response.data.message, { position: "top-right" });
-      // console.log(error.response.data.message);
     }
   };
-
   return (
     <div className="Auth-container vh-100">
       <ToastContainer />
@@ -44,9 +40,9 @@ export default function Login({ saveLoginData }) {
               <div className="logo-cont text-center mb-3">
                 <img src={logo} alt="food-logo" className="w-50" />
               </div>
-              <h3>Log In</h3>
+              <h5> Reset Password</h5>
               <p className="text-muted">
-                Welcome Back! Please enter your details
+                Please Enter Your Otp or Check Your Inbox
               </p>
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="flex-column my-2">
@@ -79,9 +75,30 @@ export default function Login({ saveLoginData }) {
                       <i className="fa fa-key" aria-hidden="true"></i>
                     </span>
                     <input
+                      type="text"
+                      className="form-control"
+                      placeholder="OTP"
+                      {...register("seed", {
+                        required: "OTP is required",
+                      })}
+                    />
+                  </div>
+                  {errors.seed && (
+                    <p className="m-0 alert alert-danger p-1">
+                      {errors.seed.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex-column my-2">
+                  <div className="input-group mb-1">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="fa fa-key" aria-hidden="true"></i>
+                    </span>
+                    <input
                       type="password"
                       className="form-control"
-                      placeholder="Enter your Password"
+                      placeholder="new Password"
                       {...register("password", {
                         required: "Password is required",
                       })}
@@ -93,12 +110,30 @@ export default function Login({ saveLoginData }) {
                     </p>
                   )}
                 </div>
-                <div className="d-flex justify-content-end my-2">
-                  <Link to="/forgot-pass" className="text-success">
-                    Forget password
-                  </Link>
+                <div className="flex-column my-2">
+                  <div className="input-group mb-1">
+                    <span className="input-group-text" id="basic-addon1">
+                      <i className="fa fa-key" aria-hidden="true"></i>
+                    </span>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="confirm new Password"
+                      {...register("confirmPassword", {
+                        required: "confirmPassword is required",
+                      })}
+                    />
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="m-0 alert alert-danger p-1">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
                 </div>
-                <button className="w-100 btn btn-success">Login</button>
+
+                <button className="w-100 btn btn-success">
+                  Reset Password
+                </button>
               </form>
             </div>
           </div>
